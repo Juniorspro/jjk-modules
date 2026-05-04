@@ -1,0 +1,1536 @@
+/* JJK 24FRAMES — Stylesheet
+ * Extracted from main HTML for streaming via CDN.
+ * Subir a: https://juniorspro.github.io/jjk-modules/jjk-styles.css
+ */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'JetBrains Mono',monospace;color:#fff;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+  canvas{display:block;touch-action:none;width:100%;height:100%}
+
+  /* Body has black bars; stage is forced to 16:9 inside it (letterbox). */
+  body{background:#000}
+
+  /* === DEFAULT: vertical (sin rotación, ocupa toda la pantalla) === */
+  #stage{
+    position:absolute;top:0;left:0;
+    width:100vw;
+    height:100vh;
+  }
+
+  /* === LANDSCAPE MODE: rotación 90° forzando landscape en portrait === */
+  body.landscape-mode #stage{
+    position:absolute;top:50%;left:50%;
+    width:100vh;
+    height:100vw;
+    transform:translate(-50%,-50%) rotate(90deg);
+    transform-origin:center center;
+  }
+  /* En landscape real (no portrait), no rotamos, solo llenamos */
+  @media (orientation: landscape){
+    body.landscape-mode #stage{
+      position:absolute;top:0;left:0;
+      width:100vw;height:100vh;
+      transform:none;
+    }
+  }
+
+  /* ⭐ FORCED-ROTATE: cuando orientation.lock falla, el dispositivo sigue en
+     portrait físico pero el #stage rota 90°. Los MODALES (que se mueven al
+     body con appendChild) NO están dentro de #stage, así que también necesitan
+     rotación manual. Usamos `body.forced-rotate` que se activa solo cuando
+     orientation.lock falló. */
+  body.forced-rotate #emotesModal,
+  body.forced-rotate #skinsModal,
+  body.forced-rotate #roleModal,
+  body.forced-rotate #settingsModal,
+  body.forced-rotate #spawnModal,
+  body.forced-rotate #chatInputWrap,
+  body.forced-rotate #playerTapMenu{
+    /* Rotar el contenedor 90° y ajustar el viewport */
+    transform-origin:center center;
+    width:100vh !important;
+    height:100vw !important;
+    top:50% !important;
+    left:50% !important;
+    margin-top:calc(-50vw) !important;
+    margin-left:calc(-50vh) !important;
+  }
+  /* Aplicar la rotación SOLO cuando los modales están visibles (.show) */
+  body.forced-rotate #emotesModal.show,
+  body.forced-rotate #skinsModal.show,
+  body.forced-rotate #roleModal.show,
+  body.forced-rotate #settingsModal.show,
+  body.forced-rotate #spawnModal.show{
+    transform:rotate(90deg);
+  }
+
+  #app{position:absolute;inset:0}
+
+  .hud{position:absolute;inset:0;pointer-events:none;z-index:5}
+
+  .counter{
+    position:absolute;top:18px;right:18px;pointer-events:none;z-index:10;
+    background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+    padding:14px 18px;border:1px solid rgba(255,255,255,.25);border-radius:6px;
+    font-family:'Noto Serif JP',serif;text-align:right;
+  }
+  .counter .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;color:#a8d8ff;margin-bottom:4px}
+  .counter .val{font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.05em;line-height:1}
+  .counter.frozen .val{color:#5ec1ff;text-shadow:0 0 18px #5ec1ff}
+  .counter.attacking .val{color:#ff3b3b;text-shadow:0 0 18px #ff3b3b}
+
+  .frames{
+    position:absolute;top:18px;left:18px;pointer-events:none;z-index:10;
+    background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+    padding:14px 18px;border:1px solid rgba(255,255,255,.25);border-radius:6px;
+    min-width:200px;
+  }
+  .frames .lbl{font-size:10px;letter-spacing:.25em;color:#a8d8ff;margin-bottom:4px}
+  .frames .val{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:700}
+  .frames .sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:#a8d8ff;letter-spacing:.18em;margin-top:2px}
+  .frames .progress{margin-top:8px;width:180px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+  .frames .progress .bar{height:100%;width:0%;background:#5ec1ff;transition:width .08s linear}
+  .frames .density{margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#fff;letter-spacing:.15em}
+  .frames .density b{color:#5ec1ff}
+
+  .speedo{
+    position:absolute;top:148px;left:18px;pointer-events:none;z-index:10;
+    background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+    padding:10px 14px;border:1px solid rgba(255,80,80,.4);border-radius:6px;
+    opacity:0;transition:opacity .25s;
+  }
+  .speedo.on{opacity:1}
+  .speedo .lbl{font-size:9px;letter-spacing:.25em;color:#ffb0b0;margin-bottom:2px}
+  .speedo .val{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:700;color:#ff5050;text-shadow:0 0 12px #ff5050}
+
+  .title{
+    position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:9;
+    text-align:center;pointer-events:none;
+  }
+  .title .jp{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:700;letter-spacing:.4em;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+  .title .en{font-size:9px;letter-spacing:.5em;color:rgba(255,255,255,.85);margin-top:2px}
+
+  .joystick{
+    position:absolute;left:30px;bottom:30px;width:150px;height:150px;
+    border-radius:50%;background:rgba(0,0,0,.35);
+    border:2px solid rgba(255,255,255,.35);
+    pointer-events:auto;z-index:20;backdrop-filter:blur(6px);
+    touch-action:none;
+  }
+  .joystick .knob{
+    position:absolute;left:50%;top:50%;width:62px;height:62px;
+    margin:-31px 0 0 -31px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#fff,#cfe7ff 60%,#7ab8ff);
+    box-shadow:0 4px 12px rgba(0,0,0,.4),0 0 0 2px rgba(255,255,255,.6);
+    pointer-events:none;
+  }
+
+  .actions{
+    position:absolute;right:24px;bottom:24px;z-index:20;
+    width:340px;height:200px;pointer-events:none;
+  }
+  .ab{
+    position:absolute;
+    border-radius:50%;border:2px solid rgba(255,255,255,.6);
+    background:rgba(0,0,0,.35);backdrop-filter:blur(6px);color:#fff;
+    font-family:'Noto Serif JP',serif;font-weight:700;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    cursor:pointer;touch-action:none;-webkit-tap-highlight-color:transparent;
+    transition:transform .08s ease, background .15s ease, box-shadow .15s ease;
+    user-select:none;pointer-events:auto;
+  }
+  .ab .jp{font-size:26px;line-height:1;pointer-events:none}
+  .ab .en{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;font-weight:400;color:rgba(255,255,255,.85);pointer-events:none}
+  .ab:active{transform:scale(.94)}
+  /* 24FPS — primary big button, bottom-right */
+  #btnAuto{ width:120px;height:120px; right:0; bottom:0; }
+  #btnAuto .jp{font-size:36px}
+  #btnAuto .en{font-size:11px}
+  /* ATTACK — between mark and 24fps */
+  #btnAttack{ width:100px;height:100px; right:130px; bottom:6px; }
+  #btnAttack .jp{font-size:30px}
+  /* MARK — left of attack, slightly smaller */
+  #btnMark{ width:84px;height:84px; right:240px; bottom:24px; }
+  #btnMark .jp{font-size:24px}
+  /* Color variants */
+  .ab.mark{background:rgba(40,90,180,.55);box-shadow:0 0 14px rgba(94,193,255,.6)}
+  .ab.auto{background:rgba(180,140,30,.55);box-shadow:0 0 14px rgba(255,200,80,.55)}
+  .ab.disabled{opacity:.4;pointer-events:none;filter:grayscale(.7)}
+  /* Attack button stays usable always — never grays out */
+  #btnAttack.disabled{opacity:1;pointer-events:auto;filter:none}
+  .ab.glowing{animation:pulse 1.2s ease-in-out infinite}
+  .ab.holding{box-shadow:0 0 28px rgba(255,80,80,1) !important}
+  .ab.mark.holding{box-shadow:0 0 28px rgba(94,193,255,1) !important}
+  .ab.auto.active{background:rgba(255,200,80,.85);color:#1a1300;box-shadow:0 0 28px rgba(255,200,80,1)}
+
+  /* ⭐ FPS-mode action buttons — estilo FPS profesional (compactos, semi-transparentes) */
+  .fps-actions{
+    position:absolute;right:18px;bottom:24px;z-index:20;
+    display:flex;flex-direction:row;align-items:center;gap:14px;
+    pointer-events:none;
+  }
+  /* Override .ab base styles para que el flex layout funcione */
+  .fps-actions .ab{
+    position:relative !important;     /* ⭐ override del absolute */
+    right:auto !important; bottom:auto !important; /* clear posiciones */
+    pointer-events:auto;
+    background:rgba(20,22,28,0.55);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border:1.5px solid rgba(255,255,255,0.25);
+    color:#fff;
+    box-shadow:0 2px 12px rgba(0,0,0,0.4);
+    transition:transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    flex-shrink:0;
+  }
+  .fps-actions .ab:active{
+    transform:scale(0.92);
+    background:rgba(255,255,255,0.18);
+    border-color:rgba(255,255,255,0.6);
+  }
+  /* SHOOT — más grande pero sutil */
+  #btnFpsShoot{
+    width:78px !important; height:78px !important;
+    border-radius:50%;
+    border-color:rgba(255,160,140,0.4);
+  }
+  #btnFpsShoot .jp{font-size:22px;color:rgba(255,255,255,0.95)}
+  #btnFpsShoot .en{font-size:8px;letter-spacing:0.2em;color:rgba(255,255,255,0.7)}
+  /* WEAPON — más pequeño */
+  #btnFpsWeapon{
+    width:58px !important; height:58px !important;
+    border-radius:50%;
+    border-color:rgba(140,180,220,0.4);
+  }
+  #btnFpsWeapon .jp{font-size:18px;color:rgba(255,255,255,0.95)}
+  #btnFpsWeapon .en{font-size:7px;letter-spacing:0.18em;color:rgba(255,255,255,0.7)}
+
+  /* Estado activo cuando algo está agarrado — SHOOT cambia a "throw" */
+  body.fps-grabbing #btnFpsShoot{
+    border-color:rgba(80,200,255,0.6) !important;
+    box-shadow:0 0 18px rgba(80,200,255,0.4), 0 2px 12px rgba(0,0,0,0.4);
+  }
+  body.fps-grabbing #btnFpsShoot .jp{color:#80d0ff}
+
+  /* ============== 🎭 ROLE SELECTION MODAL ============== */
+  .role-modal{
+    position:fixed;inset:0;
+    background:linear-gradient(160deg, rgba(8,10,18,0.95) 0%, rgba(20,18,32,0.95) 100%);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    z-index:200;
+    display:none;
+    align-items:center;justify-content:center;
+    padding:20px;
+    overflow-y:auto;
+  }
+  .role-modal.show{display:flex}
+  .role-content{
+    width:100%;max-width:560px;
+    background:linear-gradient(180deg, #181625 0%, #0f0d1a 100%);
+    border:1px solid rgba(140,100,200,0.3);
+    border-radius:20px;
+    padding:24px 18px;
+    box-shadow:0 12px 60px rgba(80,40,200,0.3), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  }
+  .role-header{text-align:center;margin-bottom:20px}
+  .role-header h2{
+    margin:0;color:#fff;
+    font-family:'Noto Serif JP', serif;font-size:22px;font-weight:700;
+    letter-spacing:0.05em;
+  }
+  .role-subtitle{
+    margin:6px 0 0 0;color:rgba(255,255,255,0.55);
+    font-family:'JetBrains Mono', monospace;font-size:11px;
+    letter-spacing:0.1em;
+  }
+  .role-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  }
+  @media (max-width:460px){ .role-grid{grid-template-columns:1fr} }
+  .role-card{
+    position:relative;
+    background:linear-gradient(180deg, rgba(40,32,60,0.85) 0%, rgba(24,20,40,0.85) 100%);
+    border:1.5px solid rgba(160,120,220,0.2);
+    border-radius:14px;
+    padding:18px 14px;
+    color:#fff;
+    cursor:pointer;
+    text-align:center;
+    transition:all 0.15s ease;
+    -webkit-tap-highlight-color:transparent;
+    overflow:hidden;
+  }
+  .role-card::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 0%, rgba(140,100,255,0.15) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .role-card:active{
+    transform:scale(0.97);
+    border-color:rgba(180,140,255,0.6);
+  }
+  .role-card.disabled{
+    opacity:0.45;
+    cursor:not-allowed;
+  }
+  .role-card.disabled:active{transform:none}
+  .role-card.selected{
+    border-color:rgba(120,200,255,0.7);
+    box-shadow:0 0 24px rgba(80,180,255,0.3);
+  }
+  .role-emoji{font-size:42px;line-height:1;margin-bottom:8px}
+  .role-name{
+    font-family:'Noto Serif JP', serif;
+    font-size:15px;font-weight:700;letter-spacing:0.06em;
+    margin-bottom:6px;
+    color:rgba(255,255,255,0.95);
+  }
+  .role-desc{
+    font-family:'JetBrains Mono', monospace;
+    font-size:9.5px;line-height:1.4;
+    color:rgba(255,255,255,0.55);
+    min-height:26px;
+  }
+  .role-tag{
+    display:inline-block;margin-top:10px;
+    padding:3px 10px;border-radius:99px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:8.5px;letter-spacing:0.15em;font-weight:600;
+  }
+  .tag-active{
+    background:rgba(80,200,140,0.18);
+    border:1px solid rgba(80,200,140,0.4);
+    color:#7ad8a8;
+  }
+  .tag-soon{
+    background:rgba(160,120,220,0.12);
+    border:1px solid rgba(160,120,220,0.3);
+    color:rgba(180,160,220,0.8);
+  }
+
+  /* CROSSHAIR para FPS mode — más limpio */
+  #crosshair{
+    position:absolute;left:50%;top:50%;
+    width:18px;height:18px;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    z-index:30;
+  }
+  #crosshair::before, #crosshair::after{
+    content:'';position:absolute;background:rgba(255,255,255,0.85);
+    box-shadow:0 0 3px rgba(0,0,0,0.7);
+  }
+  #crosshair::before{
+    left:0;top:50%;width:100%;height:1.5px;
+    transform:translateY(-50%);
+  }
+  #crosshair::after{
+    top:0;left:50%;width:1.5px;height:100%;
+    transform:translateX(-50%);
+  }
+  body.fps-grabbing #crosshair::before,
+  body.fps-grabbing #crosshair::after{
+    background:rgba(80,200,255,1);
+    box-shadow:0 0 6px rgba(80,200,255,0.9);
+  }
+
+  /* REMATE button — appears centered above when 50-combo reached */
+  #btnRemate{
+    position:absolute;left:50%;bottom:140px;transform:translateX(-50%) scale(0.5);
+    width:110px;height:110px;border-radius:50%;
+    border:4px solid #ffec6e;
+    background:radial-gradient(circle at 30% 25%, #ff5a2a, #a01010);
+    color:#fff;font-family:'Noto Serif JP',serif;font-weight:900;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    cursor:pointer;touch-action:none;-webkit-tap-highlight-color:transparent;
+    z-index:30;user-select:none;
+    box-shadow:0 0 48px rgba(255,90,40,.95), 0 12px 28px rgba(0,0,0,.6);
+    opacity:0;pointer-events:none;
+    transition:opacity .25s ease, transform .2s cubic-bezier(.2,1.6,.4,1);
+    animation:remateEcho 1.0s ease-in-out infinite;
+  }
+  #btnRemate.show{opacity:1;pointer-events:auto;transform:translateX(-50%) scale(1)}
+  #btnRemate:active{transform:translateX(-50%) scale(.92)}
+  #btnRemate .jp{font-size:34px;text-shadow:0 3px 6px rgba(0,0,0,.7)}
+  #btnRemate .en{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.25em;color:#ffec6e}
+  @keyframes remateEcho{
+    0%,100%{box-shadow:0 0 48px rgba(255,90,40,.95), 0 12px 28px rgba(0,0,0,.6)}
+    50%{box-shadow:0 0 80px rgba(255,236,110,1), 0 12px 28px rgba(0,0,0,.6)}
+  }
+  @keyframes pulse{
+    0%,100%{box-shadow:0 0 18px rgba(94,193,255,.6)}
+    50%{box-shadow:0 0 36px rgba(94,193,255,1)}
+  }
+
+  /* Density meter that appears when holding mark */
+  .densityBar{
+    position:absolute;right:140px;bottom:50px;width:30px;height:200px;z-index:21;
+    background:rgba(0,0,0,.4);border:1px solid rgba(94,193,255,.5);border-radius:6px;
+    overflow:hidden;opacity:0;transition:opacity .25s, border-color .25s, box-shadow .25s;pointer-events:none;
+  }
+  .densityBar.on{opacity:1}
+  .densityBar.locked{
+    border-color:#fff;
+    box-shadow:0 0 24px #5ec1ff, inset 0 0 18px rgba(94,193,255,.4);
+    animation:lockPulse 1s ease-in-out infinite;
+  }
+  @keyframes lockPulse{
+    0%,100%{box-shadow:0 0 24px #5ec1ff, inset 0 0 18px rgba(94,193,255,.4)}
+    50%{box-shadow:0 0 36px #fff, inset 0 0 28px rgba(255,255,255,.6)}
+  }
+  .densityBar .fill{
+    position:absolute;left:0;right:0;bottom:0;
+    background:linear-gradient(to top, #5ec1ff, #ffffff);
+    transition:height .08s ease;
+    height:0%;
+  }
+  .densityBar .lbl{
+    position:absolute;left:50%;top:-20px;transform:translateX(-50%);
+    font-size:9px;letter-spacing:.2em;color:#5ec1ff;white-space:nowrap;
+  }
+  .densityBar .lockState{
+    position:absolute;left:50%;top:-44px;transform:translateX(-50%);
+    font-size:18px;opacity:0;transition:opacity .25s;
+    text-shadow:0 0 12px #5ec1ff;
+  }
+  .densityBar.locked .lockState{opacity:1}
+
+  .hint{
+    position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:8;
+    background:rgba(0,0,0,.4);padding:6px 12px;border-radius:14px;
+    font-size:10px;letter-spacing:.18em;color:rgba(255,255,255,.9);pointer-events:none;
+    white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;
+  }
+
+  .phase{
+    position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:11;
+    pointer-events:none;text-align:center;opacity:0;transition:opacity .3s;
+  }
+  .phase.show{opacity:1}
+  .phase .jp{font-family:'Noto Serif JP',serif;font-size:64px;font-weight:700;text-shadow:0 0 30px currentColor, 0 4px 12px rgba(0,0,0,.6);letter-spacing:.2em}
+  .phase .en{font-size:11px;letter-spacing:.5em;margin-top:6px;color:rgba(255,255,255,.95)}
+  .phase.mark{color:#5ec1ff}
+  .phase.attack{color:#ff5050}
+
+  #slowVignette{
+    position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;transition:opacity .25s;
+    background:radial-gradient(circle at center, transparent 30%, rgba(40,90,180,.35) 100%);
+    mix-blend-mode:multiply;
+  }
+  #slowVignette.on{opacity:1}
+
+  #speedLines{
+    position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;transition:opacity .25s;
+    background:
+      repeating-linear-gradient(90deg, transparent 0, transparent 6px, rgba(255,255,255,.08) 6px, rgba(255,255,255,.08) 7px),
+      radial-gradient(circle at center, transparent 30%, rgba(255,80,80,.18) 100%);
+    mix-blend-mode:screen;
+  }
+  #speedLines.on{opacity:1}
+
+  /* Motion blur overlay — radial blur from the edges, sharp center */
+  #motionBlur{
+    position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;
+    transition:opacity .15s ease;
+    backdrop-filter:blur(0px);
+    -webkit-mask-image:radial-gradient(circle at center, transparent 25%, black 70%);
+    mask-image:radial-gradient(circle at center, transparent 25%, black 70%);
+  }
+  #motionBlur.lvl1{opacity:1; backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px)}
+  #motionBlur.lvl2{opacity:1; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px)}
+  #motionBlur.lvl3{opacity:1; backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px)}
+
+  @media (max-width:480px){
+    .joystick{width:110px;height:110px;left:18px;bottom:24px}
+    .joystick .knob{width:46px;height:46px;margin:-23px 0 0 -23px}
+    .actions{width:240px;height:150px}
+    #btnAuto{width:88px;height:88px; right:0;bottom:0}
+    #btnAuto .jp{font-size:26px}
+    #btnAttack{width:78px;height:78px; right:92px;bottom:0}
+    #btnAttack .jp{font-size:22px}
+    #btnMark{width:66px;height:66px; right:172px;bottom:14px}
+    .settings-btn{width:42px;height:42px;top:10px;right:10px}
+    .settings-btn .jp{font-size:18px}
+  }
+
+  /* === MODO VERTICAL (default, sin landscape-mode) === */
+  /* Botones combate más chicos y joystick más arriba para que quepa todo */
+  body:not(.landscape-mode) .joystick{
+    width:90px;height:90px;left:14px;bottom:14px;
+  }
+  body:not(.landscape-mode) .joystick .knob{
+    width:38px;height:38px;margin:-19px 0 0 -19px;
+  }
+  body:not(.landscape-mode) .actions{
+    width:200px;height:120px;right:12px;bottom:12px;
+  }
+  body:not(.landscape-mode) #btnAuto{
+    width:64px;height:64px;right:0;bottom:0;
+  }
+  body:not(.landscape-mode) #btnAuto .jp{font-size:18px}
+  body:not(.landscape-mode) #btnAuto .en{font-size:7px}
+  body:not(.landscape-mode) #btnAttack{
+    width:60px;height:60px;right:68px;bottom:0;
+  }
+  body:not(.landscape-mode) #btnAttack .jp{font-size:18px}
+  body:not(.landscape-mode) #btnAttack .en{font-size:7px}
+  body:not(.landscape-mode) #btnMark{
+    width:54px;height:54px;right:130px;bottom:6px;
+  }
+  body:not(.landscape-mode) #btnMark .jp{font-size:16px}
+  body:not(.landscape-mode) #btnMark .en{font-size:7px}
+  body:not(.landscape-mode) .spawn-btn{
+    width:48px;height:48px;
+  }
+  body:not(.landscape-mode) .spawn-btn .jp{font-size:18px}
+  body:not(.landscape-mode) .spawn-btn .en{font-size:7px}
+  body:not(.landscape-mode) .interact-btn{
+    width:44px;height:44px;font-size:20px;
+  }
+  body:not(.landscape-mode) .chat-btn{
+    width:44px;height:44px;font-size:18px;left:64px;
+  }
+  body:not(.landscape-mode) .settings-btn,
+  body:not(.landscape-mode) .fullscreen-btn{
+    width:38px;height:38px;
+  }
+  body:not(.landscape-mode) .hint{
+    font-size:9px;letter-spacing:.15em;
+  }
+  body:not(.landscape-mode) .title{
+    display:none;  /* el título grande no entra en vertical */
+  }
+  body:not(.landscape-mode) .frames,
+  body:not(.landscape-mode) .counter{
+    transform:scale(0.7);transform-origin:top left;
+  }
+  body:not(.landscape-mode) .counter{
+    transform-origin:top right;
+  }
+    .ab .jp{font-size:16px}
+    .title .jp{font-size:20px}
+    .counter .val,.frames .val{font-size:20px}
+    .frames{min-width:170px}
+    .frames .progress{width:150px}
+  }
+  /* ============ CINEMATIC OVERLAYS (during REMATE) ============ */
+  #cinematicOverlay{
+    position:absolute;inset:0;pointer-events:none;z-index:50;
+    opacity:0;transition:opacity 0.3s ease;
+  }
+  #cinematicOverlay.show{opacity:1}
+  #cineGrade{
+    position:absolute;inset:0;pointer-events:none;z-index:1;
+    background:transparent;mix-blend-mode:multiply;
+    transition:background 0.3s ease;
+  }
+  #cineGrade.cool{background:rgba(40,80,160,0.30)}
+  #cineGrade.warm{background:rgba(255,150,50,0.25)}
+  #cineGrade.red{background:rgba(255,30,30,0.35)}
+  #cineVignette{
+    position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%);
+  }
+  #cineLetterbox::before, #cineLetterbox::after{
+    /* Letterbox bars removed per user request */
+    display:none;
+  }
+  #cineFlash{
+    position:absolute;inset:0;pointer-events:none;z-index:5;
+    background:#fff;opacity:0;
+  }
+  #cineFlash.show{opacity:1;transition:opacity 0.05s linear}
+  #cineFlash.fade{opacity:0;transition:opacity 0.3s ease}
+  #cineBigKanji{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-50%) scale(0.3);
+    font-family:'Noto Serif JP',serif;font-weight:900;
+    font-size:35vmin;line-height:1;color:#fff;
+    text-shadow:
+      -6px -6px 0 #000, 6px -6px 0 #000,
+      -6px 6px 0 #000, 6px 6px 0 #000,
+      0 0 60px rgba(255,80,40,0.9);
+    opacity:0;z-index:6;pointer-events:none;
+  }
+  #cineBigKanji.show{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-3deg);transition:transform 0.15s cubic-bezier(0.2, 1.6, 0.4, 1), opacity 0.1s ease}
+  #cineBigKanji.fade{opacity:0;transform:translate(-50%,-50%) scale(1.6) rotate(2deg);transition:all 0.3s ease}
+  .cinematicKanji{
+    position:absolute;
+    font-family:'Noto Serif JP',serif;font-weight:900;color:#fff;
+    text-shadow:-3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000, 0 0 16px rgba(255,80,40,0.9);
+    pointer-events:none;z-index:5;
+    transform:translate(-50%,-50%) scale(0.3);
+    opacity:0;
+    transition:transform 0.12s cubic-bezier(0.2, 1.6, 0.4, 1), opacity 0.15s ease;
+  }
+  .cinematicKanji.show{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-3deg)}
+  #cineFinish{
+    /* Hidden — no FINISH card per user request */
+    display:none;
+  }
+  #cineFinish.show{opacity:1;background:rgba(0,0,0,0.55)}
+  #cineFinish .jp{
+    font-family:'Noto Serif JP',serif;font-weight:900;font-size:30vmin;line-height:0.9;
+    background:linear-gradient(180deg, #fff 30%, #ffd060 60%, #ff2010 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 30px rgba(255,80,20,0.9));
+    transform:scale(0.7);transition:transform 0.5s cubic-bezier(0.2, 1.6, 0.4, 1);
+  }
+  #cineFinish.show .jp{transform:scale(1)}
+  #cineFinish .en{
+    font-family:'JetBrains Mono',monospace;font-size:1.8vmin;font-weight:700;
+    letter-spacing:1em;margin-top:1.5%;color:#fff;
+  }
+
+  /* ============ NEW ANIME EFFECTS ============ */
+
+  /* MANGA MODE — convierte todo en dibujo line-art */
+  /* Aplicado al canvas/stage con filter durante una fase del remate */
+  #stage.mangaMode canvas{
+    filter: contrast(2.5) saturate(0) brightness(1.15) drop-shadow(0 0 0 #000);
+    transition:filter 0.15s ease;
+  }
+  #stage.mangaPanel canvas{
+    filter: contrast(2.8) saturate(0.3) brightness(1.1);
+  }
+
+  /* SPEED LINES — radial converging lines */
+  #cineSpeedLines{
+    position:absolute;inset:0;pointer-events:none;z-index:4;
+    opacity:0;
+    background:
+      repeating-conic-gradient(
+        from 0deg at 50% 50%,
+        transparent 0deg,
+        transparent 4deg,
+        rgba(0,0,0,0.85) 4deg,
+        rgba(0,0,0,0.85) 5deg
+      );
+    mask: radial-gradient(circle at 50% 50%, transparent 12%, black 35%, black 100%);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 12%, black 35%, black 100%);
+    transition:opacity 0.1s ease;
+  }
+  #cineSpeedLines.show{opacity:1}
+  #cineSpeedLines.spinning{animation: speedLinesSpin 0.4s linear infinite}
+  @keyframes speedLinesSpin{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(20deg)}
+  }
+
+  /* CHROMATIC ABERRATION — RGB split en impactos */
+  #stage.chromatic canvas{
+    filter: drop-shadow(2px 0 0 rgba(255,0,80,0.7)) drop-shadow(-2px 0 0 rgba(0,180,255,0.7));
+  }
+
+  /* ACTION PANELS — bordes negros gruesos como manga panel */
+  #cineActionPanel{
+    position:absolute;inset:0;pointer-events:none;z-index:3;
+    border:0px solid #000;
+    box-sizing:border-box;
+    transition:border 0.1s ease;
+  }
+  #cineActionPanel.show{
+    border-width:8vmin 6vmin;
+  }
+
+  /* SPARKLES — destellos de impacto */
+  .cineSparkle{
+    position:absolute;pointer-events:none;z-index:6;
+    width:8vmin;height:8vmin;
+    background:
+      radial-gradient(circle at 50% 50%, #fff 0%, rgba(255,240,200,0.9) 25%, transparent 60%);
+    transform:translate(-50%,-50%) scale(0);
+    opacity:0;
+    mix-blend-mode:screen;
+  }
+  .cineSparkle.show{
+    transform:translate(-50%,-50%) scale(1.5);
+    opacity:1;
+    transition:transform 0.18s cubic-bezier(0.2,1.8,0.4,1), opacity 0.12s ease;
+  }
+  .cineSparkle.fade{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(2.5);
+    transition:transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  /* IMPACT FLASH — flash radial corto en cada hit */
+  .cineImpactFlash{
+    position:absolute;pointer-events:none;z-index:5;
+    width:30vmin;height:30vmin;
+    background:radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,200,80,0.8) 25%, transparent 60%);
+    transform:translate(-50%,-50%) scale(0);
+    opacity:0;
+    mix-blend-mode:screen;
+  }
+  .cineImpactFlash.show{
+    transform:translate(-50%,-50%) scale(1);
+    opacity:1;
+    transition:transform 0.08s ease-out, opacity 0.05s ease-out;
+  }
+  .cineImpactFlash.fade{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(1.8);
+    transition:all 0.25s ease;
+  }
+
+  /* SHAKE — camera shake en impactos fuertes */
+  @keyframes cineShake{
+    0%, 100%{transform:translate(0,0)}
+    20%{transform:translate(-1vmin, 0.5vmin)}
+    40%{transform:translate(1vmin, -1vmin)}
+    60%{transform:translate(-0.5vmin, 1vmin)}
+    80%{transform:translate(1vmin, 0.5vmin)}
+  }
+  #stage.shaking{animation:cineShake 0.18s linear}
+  #stage.shakingHard{animation:cineShake 0.12s linear 2}
+
+  /* HALFTONE OVERLAY — patrón de puntos manga */
+  #cineHalftone{
+    position:absolute;inset:0;pointer-events:none;z-index:3;
+    opacity:0;
+    background-image:radial-gradient(circle at center, #000 1.2px, transparent 1.5px);
+    background-size:6px 6px;
+    mix-blend-mode:multiply;
+    transition:opacity 0.2s ease;
+  }
+  #cineHalftone.show{opacity:0.45}
+
+  /* 24FPS timer ring — overlay sobre el botón */
+  .autoTimerRing{
+    position:absolute;inset:-3px;pointer-events:none;
+    width:calc(100% + 6px); height:calc(100% + 6px);
+    opacity:0;
+    transition:opacity 0.2s ease;
+  }
+  #btnAuto.timing .autoTimerRing,
+  #btnAuto.cooldown .autoTimerRing{opacity:1}
+  #btnAuto.cooldown #autoTimerCircle{stroke:#ff5544}
+  #btnAuto.timing #autoTimerCircle{stroke:#fff}
+  #btnAuto.cooldown{
+    opacity:0.55;
+    filter:grayscale(0.4);
+  }
+  /* ============ NEW: ATTACK BUTTON & SETTINGS BUTTON & GALLERY ============ */
+
+  /* Attack button styled similar to mark/auto buttons */
+  #btnAttack{
+    background:linear-gradient(180deg, #ff6b3a 0%, #d63420 100%);
+    box-shadow:0 4px 18px rgba(214,52,32,0.45), 0 0 0 1px rgba(255,200,170,0.35) inset;
+  }
+  #btnAttack:active{transform:scale(.92)}
+  #btnAttack.attacking{box-shadow:0 0 30px rgba(255,150,80,0.9), 0 0 0 2px #ffec6e inset}
+
+  /* Settings button (top-right corner) */
+  .settings-btn{
+    position:absolute;top:14px;right:14px;
+    width:52px;height:52px;
+    background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.3);
+    color:#fff;font-family:'Noto Serif JP',serif;font-weight:900;
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    z-index:30;cursor:pointer;
+    transition:all 0.2s ease;
+  }
+  .settings-btn:active{transform:scale(0.92)}
+  .settings-btn:hover{background:rgba(80,40,80,0.8);border-color:#ffec6e}
+  .settings-btn .jp{font-size:22px;line-height:1}
+
+  /* Fullscreen button — left of settings */
+  /* Fullscreen button — left of settings */
+  .fullscreen-btn{
+    position:absolute;top:14px;right:72px;
+    width:52px;height:52px;
+    background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.3);
+    color:#fff;
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    z-index:30;cursor:pointer;
+    transition:all 0.2s ease;
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:22px;
+    line-height:1;
+  }
+  .fullscreen-btn:active{transform:scale(0.92)}
+  .fullscreen-btn:hover{background:rgba(40,80,140,0.8);border-color:#6abeff}
+
+  /* Gallery modal */
+  .gallery-modal{
+    position:absolute;inset:0;
+    background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);
+    z-index:200;
+    display:none;
+    align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .gallery-modal.show{display:flex}
+  .gallery-content{
+    width:100%;max-width:900px;height:100%;max-height:600px;
+    background:linear-gradient(160deg, #1a1525 0%, #0a0510 100%);
+    border:1px solid rgba(255,200,80,0.3);
+    border-radius:12px;
+    display:grid;
+    grid-template-rows:auto 1fr 1fr;
+    overflow:hidden;
+    box-shadow:0 0 60px rgba(255,150,50,0.2);
+  }
+  .gallery-header{
+    display:flex;align-items:center;
+    padding:14px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    background:rgba(0,0,0,0.3);
+  }
+  .gallery-header .jp{
+    font-family:'Noto Serif JP',serif;font-weight:900;font-size:24px;color:#fff;
+    margin-right:14px;letter-spacing:0.1em;
+  }
+  .gallery-header .en{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:#ffec6e;letter-spacing:0.4em;flex:1;
+  }
+  #galleryClose{
+    width:36px;height:36px;border-radius:6px;
+    background:rgba(255,255,255,0.1);border:none;color:#fff;
+    font-size:18px;cursor:pointer;
+  }
+  #galleryClose:hover{background:rgba(255,80,40,0.6)}
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+    gap:8px;padding:14px;
+    overflow-y:auto;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+  }
+  .gallery-grid button{
+    padding:14px 8px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.15);
+    color:#fff;border-radius:6px;cursor:pointer;
+    font-family:'Noto Serif JP',serif;
+    transition:all 0.15s;
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+  }
+  .gallery-grid button:hover{background:rgba(255,200,80,0.15);border-color:#ffec6e}
+  .gallery-grid button.active{background:rgba(255,200,80,0.25);border-color:#ffec6e;box-shadow:0 0 12px rgba(255,200,80,0.4)}
+  .gallery-grid button .jp{font-size:22px;font-weight:900;line-height:1}
+  .gallery-grid button .en{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;color:#ffec6e;margin-top:2px}
+  .gallery-viewer{
+    position:relative;
+    background:linear-gradient(180deg, #2a2240 0%, #0d0815 100%);
+    overflow:hidden;
+  }
+  #galleryCanvas{
+    width:100%;height:100%;display:block;
+  }
+  .gallery-label{
+    position:absolute;left:14px;bottom:14px;
+    font-family:'Noto Serif JP',serif;font-weight:900;font-size:18px;color:#fff;
+    letter-spacing:0.2em;
+    text-shadow:0 2px 8px rgba(0,0,0,0.8);
+    background:rgba(0,0,0,0.5);padding:6px 14px;border-radius:4px;
+    border:1px solid rgba(255,200,80,0.4);
+  }
+
+  /* ============ PLAYER HP BAR (top-left) ============ */
+  /* HP bar oculta — ahora se muestra como número flotante sobre el personaje */
+  .player-hp-wrap{ display:none !important }
+
+  /* ============ SPAWN MENU BUTTON (left-middle) ============ */
+  .spawn-btn{
+    position:absolute;top:50%;left:14px;
+    transform:translateY(-50%);
+    width:60px;height:60px;
+    background:rgba(40,80,160,0.7);backdrop-filter:blur(8px);
+    border:1px solid rgba(120,180,255,0.5);
+    border-radius:10px;
+    color:#fff;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    z-index:30;
+    transition:all 0.15s;
+  }
+  .spawn-btn:hover{background:rgba(60,120,200,0.9);border-color:#6abeff}
+  .spawn-btn:active{transform:translateY(-50%) scale(0.92)}
+  .spawn-btn .jp{
+    font-family:'Noto Serif JP',serif;font-weight:900;font-size:24px;
+    line-height:1;color:#a0d4ff;
+  }
+  .spawn-btn .en{
+    font-family:'JetBrains Mono',monospace;font-size:8px;
+    letter-spacing:0.2em;color:#fff;
+  }
+
+  /* ============ SPAWN MODAL ============ */
+  .spawn-modal{
+    position:absolute;inset:0;
+    background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);
+    z-index:200;display:none;
+    align-items:center;justify-content:center;padding:20px;
+  }
+  .spawn-modal.show{display:flex}
+  .spawn-content{
+    width:100%;max-width:480px;
+    background:linear-gradient(160deg, #102030 0%, #050810 100%);
+    border:1px solid rgba(120,180,255,0.3);
+    border-radius:12px;overflow:hidden;
+  }
+  .spawn-header{
+    display:flex;align-items:center;
+    padding:14px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    background:rgba(0,0,0,0.3);
+  }
+  .spawn-header .jp{
+    font-family:'Noto Serif JP',serif;font-weight:900;font-size:24px;color:#fff;
+    margin-right:14px;letter-spacing:0.1em;
+  }
+  .spawn-header .en{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:#6abeff;letter-spacing:0.4em;flex:1;
+  }
+  #spawnClose{
+    width:36px;height:36px;border-radius:6px;
+    background:rgba(255,255,255,0.1);border:none;color:#fff;
+    font-size:18px;cursor:pointer;
+  }
+  #spawnClose:hover{background:rgba(255,80,40,0.6)}
+  .spawn-body{padding:14px}
+  .spawn-btn-row{
+    width:100%;
+    display:flex;align-items:center;gap:14px;
+    padding:12px 14px;margin-bottom:8px;
+    background:rgba(60,120,200,0.15);
+    border:1px solid rgba(120,180,255,0.3);
+    border-radius:8px;
+    cursor:pointer;
+    transition:all 0.15s;
+    text-align:left;
+  }
+  .spawn-btn-row:hover{background:rgba(60,120,200,0.3);border-color:#6abeff}
+  .spawn-btn-row:active{transform:scale(0.98)}
+  .spawn-row-jp{
+    font-family:'Noto Serif JP',serif;font-weight:900;font-size:32px;
+    color:#a0d4ff;line-height:1;min-width:40px;text-align:center;
+  }
+  .spawn-row-info{flex:1}
+  .spawn-row-label{
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;
+    color:#fff;letter-spacing:0.2em;
+  }
+  .spawn-row-sub{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:#aaa;letter-spacing:0.05em;margin-top:2px;
+  }
+
+  /* ============ DEATH OVERLAY ============ */
+  .death-overlay{
+    position:absolute;inset:0;
+    background:rgba(80,0,0,0.7);backdrop-filter:blur(4px);
+    z-index:300;
+    display:none;
+    align-items:center;justify-content:center;flex-direction:column;
+    pointer-events:none;
+  }
+  .death-overlay.show{display:flex}
+  .death-jp{
+    font-family:'Noto Serif JP',serif;font-weight:900;font-size:120px;
+    color:#ff4040;
+    text-shadow:0 0 40px rgba(255,80,80,0.8), 0 4px 12px rgba(0,0,0,0.8);
+    letter-spacing:0.05em;
+  }
+  .death-label{
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:24px;
+    color:#fff;letter-spacing:0.4em;margin-top:14px;
+    text-shadow:0 2px 8px rgba(0,0,0,0.8);
+  }
+  .death-sub{
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    color:#ffaaaa;letter-spacing:0.2em;margin-top:8px;
+  }
+
+  /* ============ INTERACT BUTTON (appears near TV) ============ */
+  /* ============ TOP-LEFT BUTTONS (radio + chat) ============ */
+  /* Stack horizontal arriba a la izquierda */
+  .interact-btn{
+    position:absolute;left:14px;top:14px;
+    display:flex;align-items:center;justify-content:center;
+    width:54px;height:54px;
+    background:linear-gradient(135deg, rgba(120,140,220,0.55), rgba(160,120,220,0.55));
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(200,210,255,0.5);
+    border-radius:50%;
+    color:#fff;cursor:pointer;
+    z-index:35;
+    font-size:24px;
+    transition:transform .15s ease;
+    box-shadow:0 4px 14px rgba(160,180,255,0.4);
+    pointer-events:auto;
+  }
+  .interact-btn:active{transform:scale(0.92)}
+  .interact-btn .interact-jp{display:none}
+  .interact-btn .interact-text{display:none}
+
+  /* ============ CHAT BUTTON ============ */
+  .chat-btn{
+    position:absolute;left:78px;top:14px;
+    display:flex;align-items:center;justify-content:center;
+    width:54px;height:54px;
+    background:linear-gradient(135deg, rgba(60,180,140,0.55), rgba(40,160,200,0.55));
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(200,255,230,0.5);
+    border-radius:50%;
+    color:#fff;cursor:pointer;
+    z-index:35;
+    font-size:22px;
+    transition:transform .15s ease;
+    box-shadow:0 4px 14px rgba(80,180,160,0.4);
+    pointer-events:auto;
+  }
+  .chat-btn:active{transform:scale(0.92)}
+
+  /* ============ SKINS BUTTON ============ */
+  .skins-btn{
+    position:absolute;left:142px;top:14px;
+    display:flex;align-items:center;justify-content:center;
+    width:54px;height:54px;
+    background:linear-gradient(135deg, rgba(220,150,80,0.55), rgba(220,120,160,0.55));
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,220,200,0.5);
+    border-radius:50%;
+    color:#fff;cursor:pointer;
+    z-index:35;
+    font-size:22px;
+    transition:transform .15s ease;
+    box-shadow:0 4px 14px rgba(220,140,120,0.4);
+    pointer-events:auto;
+  }
+  .skins-btn:active{transform:scale(0.92)}
+
+  body:not(.landscape-mode) .skins-btn{
+    position:absolute; left:142px; top:14px;
+  }
+
+  /* ============ SKINS GRID ============ */
+  .skins-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));
+    gap:10px;
+    padding:14px;
+    overflow-y:auto;
+    max-height:65vh;
+  }
+  .skin-item{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:6px;padding:12px 8px;
+    background:rgba(255,255,255,0.06);
+    border:2px solid rgba(255,255,255,0.12);
+    border-radius:14px;
+    cursor:pointer;
+    transition:all .15s ease;
+    pointer-events:auto;
+    text-align:center;
+  }
+  .skin-item:active{transform:scale(0.95)}
+  .skin-item.active{
+    background:rgba(255,180,100,0.18);
+    border-color:rgba(255,200,120,0.7);
+    box-shadow:0 0 18px rgba(255,180,100,0.4);
+  }
+  .skin-emoji{font-size:32px;line-height:1}
+  .skin-preview{
+    width:36px;height:48px;border-radius:6px;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    border:1px solid rgba(0,0,0,0.3);
+  }
+  .skin-preview .skin-head{flex:1.2;}
+  .skin-preview .skin-shirt{flex:1.5;}
+  .skin-preview .skin-pants{flex:1.3;}
+  .skin-name{
+    font-family:'Noto Sans JP',sans-serif;font-weight:700;
+    font-size:11px;color:#fff;line-height:1.1;
+  }
+  .skin-desc{
+    font-size:9px;color:rgba(255,255,255,0.6);line-height:1.1;
+  }
+
+  /* ============ CHAT INPUT (estilo Roblox) — arriba del joystick ============ */
+  .chat-input-wrap{
+    position:fixed;left:14px;right:14px;bottom:200px;
+    display:none;align-items:center;gap:8px;
+    z-index:9500;
+    pointer-events:auto;
+  }
+  .chat-input-wrap.show{display:flex}
+  .chat-input-wrap input{
+    flex:1;padding:12px 14px;
+    background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+    border:1px solid rgba(120,180,255,0.4);
+    border-radius:24px;color:#fff;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    outline:none;
+  }
+  .chat-input-wrap input:focus{border-color:#5ec1ff;box-shadow:0 0 12px rgba(94,193,255,0.3)}
+  .chat-input-wrap .chat-send{
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,#5ec1ff,#3a78c8);
+    border:none;color:#fff;font-size:18px;cursor:pointer;
+    box-shadow:0 2px 8px rgba(94,193,255,0.5);
+  }
+  .chat-input-wrap .chat-send:active{transform:scale(0.92)}
+  .chat-input-wrap .chat-cancel{
+    width:36px;height:36px;border-radius:50%;
+    background:rgba(80,80,80,0.6);border:none;color:#fff;font-size:14px;cursor:pointer;
+  }
+
+  /* ============ CHAT BUBBLES (flotan sobre los personajes) ============ */
+  .chat-bubble{
+    position:absolute;
+    transform:translate(-50%, -100%);
+    background:rgba(255,255,255,0.95);
+    color:#222;
+    padding:8px 14px;
+    border-radius:18px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    font-weight:600;
+    box-shadow:0 4px 16px rgba(0,0,0,0.4);
+    pointer-events:none;
+    z-index:40;
+    max-width:240px;
+    word-wrap:break-word;
+    white-space:normal;
+    line-height:1.4;
+    animation:bubbleIn 0.3s ease-out, bubbleOut 0.5s ease-in 4.5s forwards;
+  }
+  .chat-bubble::after{
+    content:'';position:absolute;
+    bottom:-8px;left:50%;transform:translateX(-50%);
+    border:6px solid transparent;
+    border-top-color:rgba(255,255,255,0.95);
+    border-bottom:0;
+  }
+  @keyframes bubbleIn{
+    from{opacity:0;transform:translate(-50%, -90%) scale(0.7)}
+    to{opacity:1;transform:translate(-50%, -100%) scale(1)}
+  }
+  @keyframes bubbleOut{
+    to{opacity:0;transform:translate(-50%, -110%) scale(0.9)}
+  }
+
+  /* ============ ARCHIVE EXPLORER MODAL ============ */
+  /* IMPORTANT: this modal sits OUTSIDE the rotated stage by using
+     position:fixed on the viewport. We use a script (below) to move it
+     to body on load so the @media rotation doesn't affect it. */
+  .archive-modal{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    z-index:9999;display:none;
+    align-items:center;justify-content:center;
+    padding:12px;
+  }
+  .archive-modal.show{display:flex}
+  .archive-content{
+    width:100%;max-width:560px;
+    max-height:min(580px, calc(100vh - 24px));
+    background:linear-gradient(155deg, #2a3658 0%, #1a223e 100%);
+    border:1px solid rgba(180,200,255,0.25);
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  }
+  .archive-header{
+    display:flex;align-items:center;
+    padding:11px 14px;
+    background:rgba(255,255,255,0.04);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    flex-shrink:0;
+  }
+  .archive-header .jp{
+    font-family:'Noto Serif JP',serif;font-weight:900;font-size:20px;color:#fff;
+    margin-right:10px;letter-spacing:0.1em;
+  }
+  .archive-header .en{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:#b8c8ff;letter-spacing:0.4em;flex:1;
+  }
+  #archiveClose{
+    width:30px;height:30px;border-radius:6px;
+    background:rgba(255,255,255,0.06);border:none;color:#fff;
+    font-size:15px;cursor:pointer;
+  }
+  #archiveClose:hover{background:rgba(255,80,80,0.5)}
+
+  .archive-tabs{
+    display:flex;
+    background:rgba(0,0,0,0.2);
+    flex-shrink:0;
+  }
+  .archive-tab{
+    flex:1;padding:10px 6px;
+    background:transparent;border:none;
+    color:#7080a8;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:10px;letter-spacing:0.2em;
+    border-bottom:2px solid transparent;
+    transition:all .15s;
+  }
+  .archive-tab:hover{color:#b8c8ff;background:rgba(180,200,255,0.06)}
+  .archive-tab.active{
+    color:#fff;border-bottom-color:#a8b8ff;
+    background:rgba(180,200,255,0.1);
+  }
+
+  .archive-body{
+    flex:1;overflow-y:auto;
+    padding:12px;
+  }
+  .archive-tab-content{display:none}
+  .archive-tab-content.active{display:block}
+
+  .archive-search-info{
+    padding:8px 10px;margin-bottom:10px;
+    background:rgba(140,160,220,0.08);
+    border-left:2px solid rgba(180,200,255,0.4);
+    border-radius:4px;
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    color:#a0b0d8;line-height:1.5;letter-spacing:0.04em;
+  }
+  .archive-source-chips{
+    display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;
+  }
+  .archive-source-chip{
+    flex:1 1 auto;min-width:80px;
+    padding:8px 10px;
+    background:rgba(0,0,0,0.3);
+    border:1px solid rgba(180,200,255,0.18);
+    color:#a8b8e0;border-radius:14px;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:0.04em;transition:all 0.15s;
+  }
+  .archive-source-chip:hover{background:rgba(140,160,220,0.22)}
+  .archive-source-chip.active{
+    background:rgba(140,160,220,0.35);
+    border-color:rgba(180,200,255,0.5);
+    color:#fff;
+  }
+
+  .archive-source-row{
+    display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  }
+
+  /* Category tabs (inside Galería) */
+  .archive-cat-row{
+    display:flex;flex-wrap:wrap;gap:6px;
+    margin-bottom:12px;
+    padding-bottom:10px;
+    border-bottom:1px solid rgba(180,200,255,0.12);
+  }
+  .archive-cat-tab{
+    display:flex;align-items:center;gap:5px;
+    padding:6px 10px;
+    background:rgba(0,0,0,0.3);
+    border:1px solid rgba(180,200,255,0.18);
+    color:#a8b8e0;border-radius:14px;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;
+    letter-spacing:0.06em;
+    transition:all 0.15s;
+  }
+  .archive-cat-tab:hover{background:rgba(140,160,220,0.22)}
+  .archive-cat-tab.active{
+    background:rgba(140,160,220,0.35);
+    border-color:rgba(180,200,255,0.5);
+    color:#fff;
+  }
+  .archive-cat-icon{font-size:12px;}
+  .archive-source-label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:#a8b8e0;letter-spacing:0.05em;
+  }
+  .archive-source-select{
+    flex:1;padding:8px 10px;
+    background:rgba(0,0,0,0.4);
+    border:1px solid rgba(180,200,255,0.25);
+    color:#fff;border-radius:6px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+  }
+  .archive-source-select option{background:#1a1f3a;color:#fff}
+
+  .archive-search-row{
+    display:flex;gap:6px;margin-bottom:10px;
+  }
+  .archive-search-row input{
+    flex:1;padding:9px 11px;
+    background:rgba(0,0,0,0.4);
+    border:1px solid rgba(180,200,255,0.25);
+    color:#fff;border-radius:6px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+  }
+  .archive-search-row input:focus{outline:none;border-color:#b8c8ff}
+  #archiveSearchBtn{
+    width:42px;
+    background:rgba(140,160,220,0.25);
+    border:1px solid rgba(180,200,255,0.3);
+    color:#fff;border-radius:6px;cursor:pointer;font-size:14px;
+  }
+  #archiveSearchBtn:hover{background:rgba(140,160,220,0.4)}
+
+  .archive-list{
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .archive-item{
+    display:flex;gap:10px;
+    padding:10px;
+    background:rgba(140,160,220,0.08);
+    border:1px solid rgba(180,200,255,0.15);
+    border-radius:8px;
+    cursor:pointer;
+    transition:all .15s;
+    text-align:left;
+    align-items:center;
+  }
+  .archive-item:hover{
+    background:rgba(140,160,220,0.2);
+    border-color:rgba(180,200,255,0.4);
+  }
+  .archive-item:active{transform:scale(0.99)}
+  .archive-thumb{
+    width:80px;height:60px;
+    background:rgba(0,0,0,0.5);
+    border-radius:5px;
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Noto Serif JP',serif;font-size:24px;
+    color:#a8b8ff;
+    background-size:cover;background-position:center;
+  }
+  .archive-info{flex:1;min-width:0}
+  .archive-title{
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:12px;color:#fff;letter-spacing:0.05em;
+    line-height:1.3;
+    /* Limit to 2 lines */
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .archive-meta{
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    color:#8898c8;letter-spacing:0.05em;margin-top:3px;
+  }
+  .archive-play-icon{
+    width:32px;height:32px;
+    background:rgba(140,255,180,0.15);
+    border:1px solid rgba(140,255,180,0.4);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:#a0ffb0;font-size:13px;
+    flex-shrink:0;
+  }
+  .archive-item:hover .archive-play-icon{
+    background:rgba(140,255,180,0.3);
+  }
+
+  .archive-empty{
+    text-align:center;padding:24px 12px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:#7888c0;letter-spacing:0.1em;
+  }
+  .archive-loading{
+    text-align:center;padding:18px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:#a8b8ff;letter-spacing:0.2em;
+  }
+
+  .archive-gallery-info{
+    padding:8px 10px;margin-bottom:10px;
+    background:rgba(140,160,220,0.08);
+    border-left:2px solid rgba(180,200,255,0.4);
+    border-radius:4px;
+    font-family:'JetBrains Mono',monospace;font-size:9px;
+    color:#a0b0d8;line-height:1.5;letter-spacing:0.04em;
+  }
+
+  .archive-now-playing{
+    padding:14px;
+    background:rgba(0,0,0,0.3);
+    border:1px solid rgba(180,200,255,0.2);
+    border-radius:8px;
+  }
+  .archive-now-playing-title{
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:13px;color:#fff;letter-spacing:0.05em;line-height:1.3;
+    margin-bottom:10px;
+  }
+  .archive-controls{display:flex;gap:6px;margin-top:10px}
+  .archive-ctrl-btn{
+    flex:1;padding:9px;
+    background:rgba(140,160,220,0.18);
+    border:1px solid rgba(180,200,255,0.3);
+    color:#fff;cursor:pointer;border-radius:6px;
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:10px;letter-spacing:0.2em;
+  }
+  .archive-ctrl-btn:hover{background:rgba(140,160,220,0.3)}
+  .archive-ctrl-btn.danger{
+    background:rgba(220,140,160,0.18);
+    border-color:rgba(255,160,180,0.35);
+  }
+  .archive-ctrl-btn.danger:hover{background:rgba(220,140,160,0.32)}
+
+  /* ============================================================
+     🖥️ PC MODE — cuando el usuario tiene mouse/teclado
+     ============================================================ */
+  body.pc-mode .joystick{ display:none !important }
+
+  /* Botones de combate más chicos en PC y reposicionados */
+  body.pc-mode #btnAuto{ width:64px;height:64px; right:14px;bottom:14px }
+  body.pc-mode #btnAuto .jp{font-size:18px}
+  body.pc-mode #btnAuto .en{font-size:7px}
+
+  body.pc-mode #btnAttack{ width:60px;height:60px; right:84px;bottom:14px }
+  body.pc-mode #btnAttack .jp{font-size:18px}
+  body.pc-mode #btnAttack .en{font-size:7px}
+
+  body.pc-mode #btnMark{ width:54px;height:54px; right:148px;bottom:14px }
+  body.pc-mode #btnMark .jp{font-size:16px}
+  body.pc-mode #btnMark .en{font-size:7px}
+
+  /* Hint de teclas debajo de cada botón */
+  body.pc-mode .ab::after{
+    content:attr(data-key);
+    position:absolute;bottom:-18px;left:50%;
+    transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;color:rgba(255,255,255,0.7);
+    background:rgba(0,0,0,0.6);
+    padding:1px 6px;border-radius:3px;
+    pointer-events:none;
+  }
+
+  /* Top-left buttons también más chicos en PC */
+  body.pc-mode .interact-btn{
+    width:42px;height:42px;font-size:18px;
+    left:14px;top:14px;
+  }
+  body.pc-mode .chat-btn{
+    width:42px;height:42px;font-size:16px;
+    left:64px;top:14px;
+  }
+
+  /* Spawn button mas chico también */
+  body.pc-mode .spawn-btn{
+    width:48px;height:48px;left:14px;top:50%;
+  }
+  body.pc-mode .spawn-btn .jp{font-size:18px}
+  body.pc-mode .spawn-btn .en{font-size:7px}
+
+  /* Help indicator de controles PC */
+  body.pc-mode #pcControlsHint{
+    display:block;
+  }
+  #pcControlsHint{
+    display:none;
+    position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+    background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:8px;
+    padding:6px 14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;color:#a8d8ff;
+    letter-spacing:0.1em;
+    z-index:25;
+    pointer-events:none;
+    white-space:nowrap;
+    opacity:0.8;
+    transition:opacity 0.3s;
+  }
+  #pcControlsHint.fade{opacity:0}
+  #pcControlsHint kbd{
+    display:inline-block;padding:1px 5px;margin:0 2px;
+    background:rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:3px;
+    font-size:9px;font-weight:700;
+    color:#fff;
+  }
+
+  /* ============ EMOTES + SETTINGS MODALS ============ */
+  .emotes-modal{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+    z-index:9999;display:none;
+    align-items:center;justify-content:center;
+    padding:14px;
+    pointer-events:none;
+  }
+  .emotes-modal.show{display:flex;pointer-events:auto}
+  .emotes-content{
+    width:100%;max-width:420px;
+    background:linear-gradient(155deg, #2a3658 0%, #1a223e 100%);
+    border:1px solid rgba(180,200,255,0.25);
+    border-radius:12px;overflow:hidden;
+    display:flex;flex-direction:column;
+    box-shadow:0 12px 40px rgba(0,0,0,0.5);
+    max-height:85vh;
+  }
+  .emotes-header{
+    padding:14px 20px;
+    display:flex;justify-content:space-between;align-items:center;
+    background:rgba(0,0,0,0.3);
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    font-family:monospace;font-size:14px;color:#a8d8ff;
+    letter-spacing:0.2em;
+  }
+  .emotes-header button{
+    background:rgba(255,255,255,0.1);border:none;color:#fff;
+    width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;
+  }
+  .emotes-grid{
+    display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;
+    padding:14px;overflow-y:auto;
+  }
+  .emote-btn{
+    aspect-ratio:1;
+    background:rgba(60,80,140,0.4);
+    border:1px solid rgba(120,180,255,0.4);
+    border-radius:10px;color:#fff;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    font-family:monospace;font-size:10px;
+    transition:all 0.15s;
+  }
+  .emote-btn:active{transform:scale(0.95);background:rgba(80,120,200,0.6)}
+  .emote-btn .emoji{font-size:32px;line-height:1}
+  .emote-btn .label{letter-spacing:0.1em;color:#cce4ff}
+
+  .setting-row{
+    background:rgba(0,0,0,0.3);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:8px;padding:12px;
+  }
+  .setting-label{
+    font-family:monospace;font-size:12px;color:#a8d8ff;
+    letter-spacing:0.15em;margin-bottom:8px;font-weight:700;
+  }
+  .setting-options{display:flex;gap:6px;flex-wrap:wrap}
+  .setting-btn{
+    flex:1;min-width:60px;padding:8px 10px;
+    background:rgba(40,60,100,0.4);
+    border:1px solid rgba(120,180,255,0.3);
+    border-radius:6px;color:#fff;cursor:pointer;
+    font-family:monospace;font-size:10px;letter-spacing:0.1em;
+    transition:all 0.15s;
+  }
+  .setting-btn:hover{background:rgba(60,90,160,0.5)}
+  .setting-btn.active{
+    background:rgba(94,193,255,0.4);
+    border-color:#5ec1ff;
+    box-shadow:0 0 10px rgba(94,193,255,0.3);
+  }
+  .setting-hint{
+    font-family:monospace;font-size:9px;color:#8898c0;
+    margin-top:6px;letter-spacing:0.05em;
+  }
+
