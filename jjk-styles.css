@@ -1769,3 +1769,178 @@
 .about-content p b{color:#fff}
 .about-content button{margin-top:14px;width:100%;padding:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:3px;color:#fff;font-family:inherit;font-size:12px;cursor:pointer}
 .about-content button:hover{background:rgba(255,255,255,0.15)}
+/* ========================================
+   MULTIKINE MODAL OVERRIDES (Gmod dark style)
+   ======================================== */
+
+/* === Modal backdrop === */
+.spawn-modal, .mp-modal, .emotes-modal {
+  background: rgba(8,10,14,0.85) !important;
+  backdrop-filter: blur(6px) !important;
+  font-family: 'Segoe UI', Tahoma, sans-serif !important;
+}
+
+/* === Modal content card === */
+.spawn-content, .mp-content, .emotes-content {
+  background: rgba(20,22,28,0.98) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 6px !important;
+  color: #fff !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+}
+
+/* === Headers === */
+.spawn-header, .mp-header, .emotes-header {
+  color: #fff !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.02em !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 14px !important;
+}
+.spawn-header .jp, .mp-header .jp, .emotes-header .jp { display: none !important }
+.spawn-header .en, .mp-header .en, .emotes-header .en {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  color: #fff !important;
+  text-transform: capitalize !important;
+}
+
+/* === Close button === */
+.spawn-close, .mp-close, .emotes-close, #spawnClose, #mpClose, #emotesClose, #skinsClose, #settingsClose, #toxsamClose, #mapsClose {
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  width: 28px !important;
+  height: 28px !important;
+  transition: all 0.15s !important;
+}
+.spawn-close:hover, .mp-close:hover, .emotes-close:hover {
+  background: rgba(255,255,255,0.08) !important;
+  color: #ffd060 !important;
+  border-color: #ffd060 !important;
+}
+
+/* === Buttons inside modals === */
+.spawn-btn-row, .mp-room-item, .emote-btn, .skin-item {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 4px !important;
+  color: #ddd !important;
+  font-family: inherit !important;
+  transition: all 0.15s !important;
+}
+.spawn-btn-row:hover, .mp-room-item:hover, .emote-btn:hover, .skin-item:hover {
+  background: rgba(255,208,96,0.08) !important;
+  border-color: rgba(255,208,96,0.3) !important;
+  color: #ffd060 !important;
+}
+.spawn-btn-row.active, .mp-room-item.active, .skin-item.active {
+  background: rgba(255,208,96,0.12) !important;
+  border-color: #ffd060 !important;
+  color: #ffd060 !important;
+}
+
+/* === Filter / search inputs === */
+.spawn-modal input, .mp-modal input, .emotes-modal input,
+.spawn-modal select, .mp-modal select {
+  background: rgba(0,0,0,0.4) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  font-family: inherit !important;
+  padding: 6px 10px !important;
+}
+.spawn-modal input:focus, .mp-modal input:focus {
+  border-color: #ffd060 !important;
+  outline: none !important;
+}
+
+/* === Toggle pills (PUBLIC/PRIVATE) === */
+.mp-toggle-btn {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  color: #ddd !important;
+  font-family: inherit !important;
+  border-radius: 4px !important;
+}
+.mp-toggle-btn.active {
+  background: rgba(255,208,96,0.15) !important;
+  border-color: #ffd060 !important;
+  color: #ffd060 !important;
+}
+.mp-toggle-btn:hover { color: #ffd060 !important }
+
+/* === MP main buttons === */
+.mp-main-btn, #mpConnectBtn, #mpRefresh, #mpCreate {
+  background: linear-gradient(135deg, rgba(60,80,120,0.6), rgba(40,60,100,0.6)) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  font-family: inherit !important;
+  font-weight: 500 !important;
+  transition: all 0.15s !important;
+}
+.mp-main-btn:hover, #mpConnectBtn:hover, #mpRefresh:hover, #mpCreate:hover {
+  background: linear-gradient(135deg, rgba(80,100,150,0.8), rgba(60,80,130,0.8)) !important;
+  border-color: #ffd060 !important;
+  color: #ffd060 !important;
+}
+
+/* === Settings rows === */
+#settingsModal .setting-row,
+.emotes-modal .setting-row {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 4px !important;
+  padding: 10px 12px !important;
+  color: #ddd !important;
+  margin-bottom: 6px !important;
+}
+#settingsModal label, .emotes-modal label {
+  color: #ccc !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+}
+input[type="range"] { accent-color: #ffd060 !important }
+
+/* === Big buttons (BROWSE/MAPS) === */
+#btnBrowseExternal, #btnMapsBrowser {
+  background: linear-gradient(135deg, rgba(60,80,120,0.6), rgba(40,60,100,0.6)) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  font-family: inherit !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  transition: all 0.15s !important;
+}
+#btnBrowseExternal:hover, #btnMapsBrowser:hover {
+  border-color: #ffd060 !important;
+  color: #ffd060 !important;
+  background: linear-gradient(135deg, rgba(80,100,150,0.8), rgba(60,80,130,0.8)) !important;
+}
+
+/* === Asset gallery items === */
+.asset-item, .source-item, .gallery-item {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 4px !important;
+  transition: all 0.15s !important;
+}
+.asset-item:hover, .source-item:hover, .gallery-item:hover {
+  border-color: #ffd060 !important;
+  background: rgba(255,208,96,0.06) !important;
+}
+
+/* === Section labels === */
+.spawn-section-label, .mp-section-label {
+  color: #888 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
