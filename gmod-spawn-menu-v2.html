@@ -1,0 +1,58 @@
+<!-- MultiKine - Gmod-style Spawn Menu v2 (with REAL subcategories) -->
+<div class="mk-gmod-modal" id="mkGmodModal">
+  <div class="mk-gmod-content">
+    <!-- Header simplified: title + close -->
+    <div class="mk-gmod-tabs">
+      <div class="mk-gmod-title">📦 Spawnlist</div>
+      <button class="mk-gmod-close" id="mkGmodClose">✕</button>
+    </div>
+    <!-- Body: 2 column layout -->
+    <div class="mk-gmod-body">
+      <!-- Left: Sources tree (with collapsible sub-categories) -->
+      <aside class="mk-gmod-sidebar mk-gmod-left">
+        <div class="mk-gmod-cat-group">
+          <div class="mk-gmod-cat-header">📁 Mis Spawns</div>
+          <div class="mk-gmod-cat-item active" data-source="recent">⭐ Recientes</div>
+          <div class="mk-gmod-cat-item" data-source="favorites">❤️ Favoritos</div>
+        </div>
+        <div class="mk-gmod-cat-group">
+          <div class="mk-gmod-cat-header">📁 Built-in</div>
+          <div class="mk-gmod-cat-item" data-source="construct">🏗️ Construct Props</div>
+          <div class="mk-gmod-cat-item" data-source="builder">🧱 Builder Primitives</div>
+        </div>
+        <div class="mk-gmod-cat-group" id="mkGmodExternal">
+          <div class="mk-gmod-cat-header">📁 External Galleries</div>
+          <!-- External sources con subcategorías expandibles -->
+          <div class="mk-gmod-source-wrap" data-source="toxsam">
+            <div class="mk-gmod-source-header" data-source="toxsam">
+              <span class="mk-gmod-arrow">▶</span> 🎨 ToxSam
+            </div>
+            <div class="mk-gmod-subcats" data-subcats="toxsam"></div>
+          </div>
+          <div class="mk-gmod-source-wrap" data-source="polyhaven">
+            <div class="mk-gmod-source-header" data-source="polyhaven">
+              <span class="mk-gmod-arrow">▶</span> 🌳 PolyHaven
+            </div>
+            <div class="mk-gmod-subcats" data-subcats="polyhaven"></div>
+          </div>
+          <div class="mk-gmod-source-wrap" data-source="khronos">
+            <div class="mk-gmod-source-header" data-source="khronos">
+              <span class="mk-gmod-arrow">▶</span> 🦆 Khronos Demo
+            </div>
+            <div class="mk-gmod-subcats" data-subcats="khronos"></div>
+          </div>
+        </div>
+      </aside>
+      <!-- Center: Grid -->
+      <main class="mk-gmod-grid-wrap">
+        <div class="mk-gmod-search-bar">
+          <input type="text" id="mkGmodSearch" placeholder="🔍 Buscar prop..." />
+          <span class="mk-gmod-count" id="mkGmodCount">0 props</span>
+        </div>
+        <div class="mk-gmod-grid" id="mkGmodGrid">
+          <div class="mk-gmod-empty">Selecciona una categoría</div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
