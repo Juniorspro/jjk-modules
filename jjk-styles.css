@@ -2182,4 +2182,175 @@ input[type="range"] { accent-color: #ffd060 !important }
   .mk-gmod-cat-header { display: none; }
   .mk-gmod-tab { padding: 8px 10px; font-size: 11px; }
  }
-                                              
+     /* =================================================================== */
+/* === AERO CRISTAL THEME (Windows Vista/7-style glass) ============== */
+/* Append to jjk-styles.css                                            */
+/* =================================================================== */
+
+/* Override del modal gmod: cristal aero */
+.mk-gmod-modal {
+  /* backdrop con blur fuerte (efecto vidrio esmerilado) */
+  background: rgba(20, 35, 60, 0.45) !important;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+.mk-gmod-content {
+  background: linear-gradient(
+    180deg,
+    rgba(140, 180, 230, 0.22) 0%,
+    rgba(80, 130, 200, 0.32) 50%,
+    rgba(40, 80, 150, 0.40) 100%
+  ) !important;
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(180, 220, 255, 0.35) !important;
+  border-radius: 10px !important;
+  box-shadow:
+    0 12px 50px rgba(0, 30, 80, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 0 30px rgba(120, 180, 240, 0.08) !important;
+}
+
+/* Tabs del header con highlight cristal */
+.mk-gmod-tabs {
+  background: linear-gradient(
+    180deg,
+    rgba(120, 170, 220, 0.30) 0%,
+    rgba(60, 110, 180, 0.20) 100%
+  ) !important;
+  border-bottom: 1px solid rgba(180, 220, 255, 0.25) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.mk-gmod-tab {
+  color: rgba(220, 235, 255, 0.85) !important;
+}
+.mk-gmod-tab:hover {
+  background: rgba(180, 220, 255, 0.12) !important;
+  color: #fff !important;
+}
+.mk-gmod-tab.active {
+  color: #ffffff !important;
+  background: rgba(180, 220, 255, 0.18) !important;
+  border-bottom-color: #aaddff !important;
+  text-shadow: 0 0 8px rgba(170, 220, 255, 0.6);
+}
+
+/* Sidebars */
+.mk-gmod-sidebar {
+  background: rgba(20, 50, 90, 0.28) !important;
+  backdrop-filter: blur(8px);
+  border-color: rgba(180, 220, 255, 0.15) !important;
+}
+.mk-gmod-cat-header {
+  color: #aaddff !important;
+  background: rgba(180, 220, 255, 0.08) !important;
+  text-shadow: 0 0 6px rgba(170, 220, 255, 0.4);
+}
+.mk-gmod-cat-item {
+  color: rgba(220, 235, 255, 0.85) !important;
+}
+.mk-gmod-cat-item:hover {
+  background: rgba(180, 220, 255, 0.12) !important;
+  color: #fff !important;
+}
+.mk-gmod-cat-item.active {
+  background: rgba(180, 220, 255, 0.20) !important;
+  color: #fff !important;
+  border-left-color: #aaddff !important;
+  text-shadow: 0 0 8px rgba(170, 220, 255, 0.5);
+}
+
+/* Center grid wrap */
+.mk-gmod-grid-wrap {
+  background: rgba(15, 35, 70, 0.20) !important;
+}
+.mk-gmod-search-bar {
+  background: rgba(50, 90, 140, 0.25) !important;
+  border-bottom: 1px solid rgba(180, 220, 255, 0.15) !important;
+}
+.mk-gmod-search-bar input {
+  background: rgba(15, 30, 60, 0.45) !important;
+  border: 1px solid rgba(180, 220, 255, 0.25) !important;
+  color: #fff !important;
+}
+.mk-gmod-search-bar input:focus {
+  border-color: #aaddff !important;
+  box-shadow: 0 0 8px rgba(170, 220, 255, 0.4);
+}
+
+/* Prop cards */
+.mk-gmod-prop-card {
+  background: linear-gradient(
+    180deg,
+    rgba(180, 220, 255, 0.18) 0%,
+    rgba(60, 110, 180, 0.25) 100%
+  ) !important;
+  border: 1px solid rgba(180, 220, 255, 0.25) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 1px 3px rgba(0, 20, 50, 0.4);
+}
+.mk-gmod-prop-card:hover {
+  border-color: #aaddff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 4px 16px rgba(170, 220, 255, 0.4) !important;
+}
+.mk-gmod-prop-thumb {
+  background: rgba(0, 20, 50, 0.20) !important;
+}
+.mk-gmod-prop-name {
+  background: rgba(0, 20, 50, 0.55) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Tools sidebar items */
+.mk-gmod-tool-tab.active {
+  color: #aaddff !important;
+  background: rgba(180, 220, 255, 0.12) !important;
+  border-bottom-color: #aaddff !important;
+}
+.mk-gmod-tool-item:hover {
+  background: rgba(180, 220, 255, 0.12) !important;
+  color: #fff !important;
+  border-left-color: #aaddff !important;
+}
+
+/* Close button */
+.mk-gmod-close {
+  color: rgba(220, 235, 255, 0.7) !important;
+  font-size: 22px !important;
+  font-weight: bold;
+}
+.mk-gmod-close:hover {
+  color: #ff8888 !important;
+  text-shadow: 0 0 8px rgba(255, 100, 100, 0.5);
+}
+
+/* =================================================================== */
+/* Aplicar Aero Cristal a OTROS modales del juego                      */
+/* =================================================================== */
+
+/* Modales de spawn, archive, gallery, mp, settings, etc */
+.spawn-modal .spawn-modal-inner,
+.archive-modal .archive-modal-inner,
+.gallery-modal .gallery-modal-inner,
+#mpModal > div,
+#settingsModal > div,
+#aboutModal > div,
+.mk-maps-modal .mk-maps-content,
+#startMenu {
+  background: linear-gradient(
+    180deg,
+    rgba(140, 180, 230, 0.22) 0%,
+    rgba(80, 130, 200, 0.32) 50%,
+    rgba(40, 80, 150, 0.40) 100%
+  ) !important;
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(180, 220, 255, 0.35) !important;
+  box-shadow:
+    0 12px 50px rgba(0, 30, 80, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
