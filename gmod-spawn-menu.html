@@ -1,0 +1,87 @@
+<!-- MultiKine - Gmod-style Spawn Menu (load via fetch from jjk-modules CDN) -->
+<div class="mk-gmod-modal" id="mkGmodModal">
+  <div class="mk-gmod-content">
+    <!-- Header tabs -->
+    <div class="mk-gmod-tabs">
+      <button class="mk-gmod-tab active" data-tab="spawnlists">📦 Spawnlists</button>
+      <button class="mk-gmod-tab" data-tab="weapons">🔫 Weapons</button>
+      <button class="mk-gmod-tab" data-tab="entities">🎯 Entities</button>
+      <button class="mk-gmod-tab" data-tab="npcs">👤 NPCs</button>
+      <button class="mk-gmod-tab" data-tab="vehicles">🚗 Vehicles</button>
+      <button class="mk-gmod-tab" data-tab="tools">🔧 Tools</button>
+      <button class="mk-gmod-close" id="mkGmodClose">✕</button>
+    </div>
+    <!-- Body: 3 column layout -->
+    <div class="mk-gmod-body">
+      <!-- Left: Categories tree -->
+      <aside class="mk-gmod-sidebar mk-gmod-left">
+        <div class="mk-gmod-cat-group">
+          <div class="mk-gmod-cat-header">📁 Mis Spawns</div>
+          <div class="mk-gmod-cat-item active" data-source="recent">⭐ Recientes</div>
+          <div class="mk-gmod-cat-item" data-source="favorites">❤️ Favoritos</div>
+        </div>
+        <div class="mk-gmod-cat-group">
+          <div class="mk-gmod-cat-header">📁 Built-in</div>
+          <div class="mk-gmod-cat-item" data-source="construct">🏗️ Construct Props</div>
+          <div class="mk-gmod-cat-item" data-source="builder">🧱 Builder</div>
+        </div>
+        <div class="mk-gmod-cat-group">
+          <div class="mk-gmod-cat-header">📁 External Sources</div>
+          <div class="mk-gmod-cat-item" data-source="toxsam">🎨 ToxSam</div>
+          <div class="mk-gmod-cat-item" data-source="polyhaven">🌳 PolyHaven</div>
+          <div class="mk-gmod-cat-item" data-source="khronos">🦆 Khronos</div>
+        </div>
+        <div class="mk-gmod-cat-group">
+          <div class="mk-gmod-cat-header">📁 Browse</div>
+          <div class="mk-gmod-cat-item" data-source="addons">📦 Addons</div>
+        </div>
+      </aside>
+      <!-- Center: Grid -->
+      <main class="mk-gmod-grid-wrap">
+        <div class="mk-gmod-search-bar">
+          <input type="text" id="mkGmodSearch" placeholder="🔍 Buscar prop..." />
+          <span class="mk-gmod-count" id="mkGmodCount">0 props</span>
+        </div>
+        <div class="mk-gmod-grid" id="mkGmodGrid">
+          <div class="mk-gmod-empty">Selecciona una categoría</div>
+        </div>
+      </main>
+      <!-- Right: Tools -->
+      <aside class="mk-gmod-sidebar mk-gmod-right">
+        <div class="mk-gmod-tool-tabs">
+          <button class="mk-gmod-tool-tab active" data-tooltab="constraints">Constraints</button>
+          <button class="mk-gmod-tool-tab" data-tooltab="construction">Construction</button>
+          <button class="mk-gmod-tool-tab" data-tooltab="render">Render</button>
+        </div>
+        <div class="mk-gmod-tool-content" data-tooltab="constraints">
+          <div class="mk-gmod-tool-item">⚙️ Axis</div>
+          <div class="mk-gmod-tool-item">⚪ Ball Socket</div>
+          <div class="mk-gmod-tool-item">⛓️ Hydraulic</div>
+          <div class="mk-gmod-tool-item">🔄 Motor</div>
+          <div class="mk-gmod-tool-item">💪 Muscle</div>
+          <div class="mk-gmod-tool-item">🚂 Pulley</div>
+          <div class="mk-gmod-tool-item">🛞 Slider</div>
+          <div class="mk-gmod-tool-item">🔗 Weld</div>
+        </div>
+        <div class="mk-gmod-tool-content" data-tooltab="construction" style="display:none">
+          <div class="mk-gmod-tool-item">🎈 Balloons</div>
+          <div class="mk-gmod-tool-item">🔘 Button</div>
+          <div class="mk-gmod-tool-item">📋 Duplicator</div>
+          <div class="mk-gmod-tool-item">💥 Dynamite</div>
+          <div class="mk-gmod-tool-item">📡 Emitter</div>
+          <div class="mk-gmod-tool-item">🪂 Hoverball</div>
+          <div class="mk-gmod-tool-item">💡 Lamps</div>
+          <div class="mk-gmod-tool-item">🚧 No Collide</div>
+          <div class="mk-gmod-tool-item">🚀 Thruster</div>
+          <div class="mk-gmod-tool-item">🛞 Wheel</div>
+        </div>
+        <div class="mk-gmod-tool-content" data-tooltab="render" style="display:none">
+          <div class="mk-gmod-tool-item">🎨 Color</div>
+          <div class="mk-gmod-tool-item">📐 Material</div>
+          <div class="mk-gmod-tool-item">📏 Resizer</div>
+          <div class="mk-gmod-tool-item">🌫️ Trails</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
