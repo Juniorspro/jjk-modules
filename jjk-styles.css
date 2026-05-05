@@ -1534,3 +1534,238 @@
     margin-top:6px;letter-spacing:0.05em;
   }
 
+/* ========================================
+   MULTIKINE OVERRIDES
+   ======================================== */
+
+/* === BUTTON BASE STYLE (Gmod minimalist) === */
+.spawn-btn, .interact-btn, .chat-btn, .skins-btn,
+.settings-btn, .fullscreen-btn, #btnCamToggle, .mp-btn {
+  background: rgba(20,25,35,0.75) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4) !important;
+  font-family: 'Segoe UI', sans-serif !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
+  transition: background 0.15s, border-color 0.15s !important;
+  touch-action: manipulation !important;
+}
+.spawn-btn:hover, .interact-btn:hover, .chat-btn:hover, .skins-btn:hover,
+.settings-btn:hover, .fullscreen-btn:hover, #btnCamToggle:hover, .mp-btn:hover {
+  background: rgba(40,50,70,0.85) !important;
+  border-color: rgba(255,255,255,0.35) !important;
+}
+
+/* === SPAWN button === */
+.spawn-btn {
+  left: 8px !important;
+  top: 50% !important;
+  transform: translateY(-30px) !important;
+  width: 46px !important;
+  height: 46px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+}
+.spawn-btn .en { font-size: 9px !important; letter-spacing: .05em }
+
+/* === CAM TOGGLE === */
+#btnCamToggle {
+  left: 8px !important;
+  top: 50% !important;
+  transform: translateY(22px) !important;
+  width: 46px !important;
+  height: 46px !important;
+  font-size: 9px !important;
+}
+
+/* === TOP-LEFT cluster === */
+.interact-btn, .chat-btn, .skins-btn {
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 18px !important;
+  top: 8px !important;
+}
+.interact-btn { left: 8px !important; right: auto !important; }
+.chat-btn { left: 54px !important; right: auto !important; }
+.skins-btn { left: 100px !important; right: auto !important; }
+
+/* === TOP-RIGHT cluster === */
+.settings-btn {
+  top: 8px !important;
+  right: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 0 !important;
+}
+.settings-btn::after { content: '⚙' !important; font-size: 18px !important }
+.fullscreen-btn {
+  top: 8px !important;
+  right: 54px !important;
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 16px !important;
+}
+
+/* === MP button === */
+.mp-btn {
+  top: 8px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: .08em !important;
+  border-radius: 18px !important;
+  background: rgba(20,25,35,0.85) !important;
+}
+
+/* === CROSSHAIR === */
+#crosshair {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 28px !important;
+  height: 28px !important;
+  border: 2px solid rgba(255,255,255,0.75) !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 0 6px rgba(0,0,0,0.5) !important;
+  pointer-events: none !important;
+}
+#crosshair::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 4px !important;
+  height: 4px !important;
+  background: rgba(255,255,255,0.85) !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  box-shadow: 0 0 2px rgba(0,0,0,0.6) !important;
+}
+
+/* === HP BAR "Hurt 100" style === */
+#playerHpWrap {
+  position: fixed !important;
+  bottom: 12px !important;
+  top: auto !important;
+  left: 8px !important;
+  right: auto !important;
+  width: 180px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  background: rgba(0,0,0,0.55) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 3px !important;
+  font-family: 'Segoe UI', sans-serif !important;
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  z-index: 10 !important;
+}
+#playerHpWrap::before {
+  content: 'Hurt' !important;
+  position: absolute !important;
+  left: 8px !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: .05em !important;
+  z-index: 2 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
+}
+#playerHpWrap::after {
+  content: '100' !important;
+  position: absolute !important;
+  right: 8px !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  z-index: 2 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
+}
+#myHpBar {
+  height: 100% !important;
+  width: 100% !important;
+  background: linear-gradient(90deg, #c83030, #d8404d) !important;
+  border-radius: 0 !important;
+  opacity: 0.85 !important;
+}
+
+/* === FPS ACTIONS === */
+.fps-actions {
+  right: 12px !important;
+  bottom: 12px !important;
+  gap: 10px !important;
+}
+.fps-actions .ab {
+  width: 60px !important;
+  height: 60px !important;
+  background: rgba(20,25,35,0.75) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  border-radius: 30px !important;
+  color: #fff !important;
+}
+.fps-actions .ab .en { font-size: 9px !important; letter-spacing: .08em; opacity: 0.7 }
+
+/* === JOYSTICK === */
+#joystick { left: 14px !important; bottom: 80px !important }
+
+/* === HINT === */
+#hint {
+  bottom: 4px !important;
+  font-size: 9px !important;
+  opacity: 0.4 !important;
+  letter-spacing: .05em !important;
+}
+
+/* === LANDSCAPE === */
+@media (orientation: landscape) {
+  .spawn-btn { left: 14px !important; top: 50% !important; transform: translateY(-30px) !important }
+  #btnCamToggle { left: 14px !important; top: 50% !important; transform: translateY(22px) !important }
+  .interact-btn { left: 14px !important }
+  .chat-btn { left: 60px !important }
+  .skins-btn { left: 106px !important }
+  .settings-btn { top: 14px !important; right: 14px !important }
+  .fullscreen-btn { top: 14px !important; right: 60px !important }
+  .mp-btn { top: 14px !important }
+  #joystick { left: 24px !important; bottom: 24px !important }
+  .fps-actions { right: 24px !important; bottom: 24px !important }
+  #playerHpWrap { bottom: 14px !important; left: 14px !important; width: 220px !important }
+}
+
+/* === Hide combat UI === */
+.hud, .speedo, .frame-counter, .phase, .speed-lines, .auto-timer-ring { display: none !important }
+
+/* === Hide all kanji === */
+.jp { display: none !important }
+
+/* === Make EN text bigger === */
+.spawn-btn .en, #btnCamToggle .en, .fps-actions .ab .en {
+  font-size: 11px !important;
+  letter-spacing: .05em !important;
+  font-weight: 600 !important;
+}
+
+/* === MULTIKINE START MENU === */
+.mk-gmod-btn{padding:6px 0;background:transparent;border:none;color:#fff;font-family:inherit;font-size:18px;font-weight:300;letter-spacing:.01em;cursor:pointer;text-align:left;transition:color .15s;text-shadow:0 1px 3px rgba(0,0,0,0.8)}
+.mk-gmod-btn:hover{color:#ffd060}
+.mk-gmod-btn.mk-cap{font-size:14px;font-weight:600;letter-spacing:.05em;color:#e8e8e8}
+.mk-gmod-btn.mk-cap:hover{color:#ffd060}
+.mk-gmod-btn.mk-disconnect{color:#ddd;font-size:16px}
+.mk-foot-btn{padding:6px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:3px;color:#fff;font-family:inherit;font-size:11px;cursor:pointer;transition:all .15s}
+.mk-foot-btn:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.35)}
+#aboutModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);z-index:10000;align-items:center;justify-content:center;padding:20px}
+#aboutModal.show{display:flex}
+.about-content{max-width:380px;width:100%;background:#2a2a2a;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:24px;color:#fff;font-family:'Segoe UI',sans-serif}
+.about-content h2{color:#fff;margin:0 0 4px;font-size:20px;font-weight:300}
+.about-content .about-sub{color:#ffd060;font-size:11px;letter-spacing:.15em;margin-bottom:16px}
+.about-content p{color:#ccc;font-size:13px;line-height:1.6;margin:6px 0}
+.about-content p b{color:#fff}
+.about-content button{margin-top:14px;width:100%;padding:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:3px;color:#fff;font-family:inherit;font-size:12px;cursor:pointer}
+.about-content button:hover{background:rgba(255,255,255,0.15)}
